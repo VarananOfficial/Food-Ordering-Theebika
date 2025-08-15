@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root@localhost:3306/food_ordering"
+}
+
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("customer") // customer, admin
+  createdAt DateTime @default(now())
+  orders    Order[]
+
+  @@map("users")
+}
+
+model Food {
+  id          String      @id @default(cuid())
+  name        String
+  description String      @db.Text
+  price       Float
+  imageUrl    String
+  createdAt   DateTime    @default(now())
+  orderItems  OrderItem[]
+
+  @@map("foods")
+}
+
+model Order {
+  id         String      @id @default(cuid())
+  userId     String
+  totalPrice Float
+  status     String      @default("Pending")
+  createdAt  DateTime    @default(now())
+  user       User        @relation(fields: [userId], references: [id])
+  orderItems OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id       String @id @default(cuid())
+  orderId  String
+  foodId   String
+  quantity Int
+  order    Order  @relation(fields: [orderId], references: [id])
+  food     Food   @relation(fields: [foodId], references: [id])
+
+  @@map("order_items")
+}
