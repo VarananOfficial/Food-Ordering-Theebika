@@ -1,5 +1,4 @@
 'use client'
-
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { Navbar } from '@/components/navbar'
@@ -28,7 +27,8 @@ import {
   Leaf,
   Award,
   ShoppingBag,
-  Utensils
+  Utensils,
+  Sparkles
 } from 'lucide-react'
 import { FC } from 'react'
 import { motion } from 'framer-motion'
@@ -79,11 +79,10 @@ const Home: React.FC = () => {
     try {
       setError(null)
       const response = await fetch('/api/foods')
-
       if (response.ok) {
         const data = await response.json()
         let foodsArray: Food[] = []
-
+        
         if (Array.isArray(data)) {
           foodsArray = data
         } else if (data.foods && Array.isArray(data.foods)) {
@@ -168,7 +167,7 @@ const Home: React.FC = () => {
       role: "Food Critic",
       content: "The best food delivery service I've ever used! Fresh ingredients, amazing flavors, and lightning-fast delivery.",
       rating: 5,
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b68b7aac?w=64&h=64&fit=crop&crop=face"
+      avatar: "https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
       name: "Michael Chen",
@@ -183,6 +182,27 @@ const Home: React.FC = () => {
       content: "Healthy, balanced meals that don't compromise on taste. My clients love the clean eating options.",
       rating: 5,
       avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=64&h=64&fit=crop&crop=face"
+    },
+    {
+      name: "David Kumar",
+      role: "Food Blogger",
+      content: "GourmetEats has revolutionized my dining experience. Every meal feels like a celebration!",
+      rating: 5,
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=64&h=64&fit=crop&crop=face"
+    },
+    {
+      name: "Lisa Thompson",
+      role: "Wellness Coach",
+      content: "Perfect for my busy lifestyle. Nutritious, delicious meals delivered right to my door.",
+      rating: 5,
+      avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=64&h=64&fit=crop&crop=face"
+    },
+    {
+      name: "James Wilson",
+      role: "Restaurant Owner",
+      content: "The attention to detail and flavor profiles are exceptional. Truly restaurant-quality meals.",
+      rating: 5,
+      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=64&h=64&fit=crop&crop=face"
     }
   ]
 
@@ -195,7 +215,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="bg-white antialiased">
-      <Navbar cartItemsCount={session ? getTotalItems() : 0} />
+      {/* <Navbar cartItemsCount={session ? getTotalItems() : 0} /> */}
       <Toaster position="top-center" richColors />
 
       {/* Hero Section */}
@@ -294,13 +314,12 @@ const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              The <span className="text-amber-600">Epicurean</span> Difference
+              The <span className="text-amber-600">GourmetEats</span> Difference
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               What sets our culinary experience apart from the rest
             </p>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature: Feature, index: number) => (
               <motion.div 
@@ -429,8 +448,8 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+      {/* Testimonials Section with Moving Animation */}
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -440,180 +459,133 @@ const Home: React.FC = () => {
               Hear from our discerning clientele about their experiences
             </p>
           </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {testimonials.map((testimonial: Testimonial, index: number) => (
-              <motion.div 
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 group border border-gray-100"
-              >
-                <div className="flex items-center mb-6">
-                  <img
-                    src={testimonial.avatar}
-                    alt={testimonial.name}
-                    className="w-14 h-14 rounded-full object-cover mr-4 border-2 border-amber-100"
-                  />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
-                    <p className="text-gray-600 text-sm">{testimonial.role}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center mb-4">
-                  {[...Array(5)].map((_, i: number) => (
-                    <Star 
-                      key={i} 
-                      className={`w-5 h-5 ${i < testimonial.rating ? 'text-amber-400 fill-current' : 'text-gray-300'}`} 
+          <div className="relative">
+            {/* Moving testimonials container */}
+            <motion.div 
+              className="flex gap-8"
+              animate={{ 
+                x: [0, -100 * testimonials.length]
+              }}
+              transition={{ 
+                duration: 30,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+              style={{ width: `${testimonials.length * 2 * 100}%` }}
+            >
+              {/* Duplicate testimonials for seamless loop */}
+              {[...testimonials, ...testimonials].map((testimonial: Testimonial, index: number) => (
+                <motion.div 
+                  key={index}
+                  className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 group border border-gray-100 flex-shrink-0"
+                  style={{ width: '400px' }}
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <div className="flex items-center mb-6">
+                    <img
+                      src={testimonial.avatar}
+                      alt={testimonial.name}
+                      className="w-14 h-14 rounded-full object-cover mr-4 border-2 border-amber-100"
                     />
-                  ))}
-                </div>
-
-                <div className="relative">
-                  <Quote className="absolute -top-2 -left-2 w-8 h-8 text-amber-200 opacity-70" />
-                  <p className="text-gray-700 leading-relaxed pl-6 italic">
-                    "{testimonial.content}"
-                  </p>
-                </div>
-              </motion.div>
-            ))}
+                    <div>
+                      <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
+                      <p className="text-gray-600 text-sm">{testimonial.role}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center mb-4">
+                    {[...Array(5)].map((_, i: number) => (
+                      <Star 
+                        key={i} 
+                        className={`w-5 h-5 ${i < testimonial.rating ? 'text-amber-400 fill-current' : 'text-gray-300'}`} 
+                      />
+                    ))}
+                  </div>
+                  <div className="relative">
+                    <Quote className="absolute -top-2 -left-2 w-8 h-8 text-amber-200 opacity-70" />
+                    <p className="text-gray-700 leading-relaxed pl-6 italic">
+                      "{testimonial.content}"
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="relative py-28 bg-gradient-to-r from-amber-600 to-orange-600 overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0 bg-[url('/pattern.png')] bg-repeat opacity-20"></div>
-        </div>
-        <div className="relative max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Elevate Your Dining Experience?
-          </h2>
-          <p className="text-xl text-amber-100 mb-8 max-w-2xl mx-auto">
-            Join our community of food enthusiasts and experience culinary excellence delivered.
-          </p>
+      
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            {!session ? (
-              <>
-                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
-                  <Button size="lg" className="bg-white text-amber-700 hover:bg-gray-50 px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl" asChild>
-                    <Link href="/auth/signup">
-                      Begin Your Journey <ArrowRight className="ml-2 w-5 h-5" />
-                    </Link>
-                  </Button>
-                </motion.div>
-                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
-                  <Button variant="outline" size="lg" className="border-2 border-white text-white hover:bg-white hover:text-amber-700 px-8 py-6 text-lg transition-all duration-300 rounded-xl" asChild>
-                    <Link href="/auth/signin">Explore Menu</Link>
-                  </Button>
-                </motion.div>
-              </>
-            ) : (
-              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
-                <Button size="lg" className="bg-white text-amber-700 hover:bg-gray-50 px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl" asChild>
-                  <Link href="#menu">
-                    Order Now <ArrowRight className="ml-2 w-5 h-5" />
-                  </Link>
-                </Button>
-              </motion.div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+      {/* Compact Footer */}
+      <footer className="bg-gradient-to-br from-amber-50 to-orange-50 text-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Brand Info */}
-            <div className="space-y-6">
+            <div className="space-y-4">
               <div className="flex items-center">
-                <ChefHat className="w-8 h-8 text-amber-400 mr-2" />
-                <span className="text-2xl font-bold text-white">Epicurean</span>
+                {/* <ChefHat className="w-8 h-8 text-amber-400 mr-2" /> */}
+                <img
+                    src="/logo.png"
+                    alt="GourmetEats Logo"
+                    className="w-8 h-8 mr-2 object-contain"
+                  />
+                
               </div>
-              <p className="text-gray-400 leading-relaxed">
+              <p className="text-gray-600 leading-relaxed text-sm">
                 Elevating home dining with chef-crafted meals made from the finest seasonal ingredients.
               </p>
-              
-              <div className="flex space-x-4 pt-4">
-                <a href="#" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-amber-500 transition-colors duration-300">
-                  <Facebook className="w-5 h-5" />
+              <div className="flex space-x-3 pt-2">
+                <a href="#" className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center hover:bg-amber-500 hover:text-white transition-colors duration-300">
+                  <Facebook className="w-4 h-4" />
                 </a>
-                <a href="#" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-amber-500 transition-colors duration-300">
-                  <Twitter className="w-5 h-5" />
+                <a href="#" className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center hover:bg-amber-500 hover:text-white transition-colors duration-300">
+                  <Twitter className="w-4 h-4" />
                 </a>
-                <a href="#" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-amber-500 transition-colors duration-300">
-                  <Instagram className="w-5 h-5" />
+                <a href="#" className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center hover:bg-amber-500 hover:text-white transition-colors duration-300">
+                  <Instagram className="w-4 h-4" />
                 </a>
               </div>
             </div>
-
             {/* Quick Links */}
             <div>
-              <h4 className="text-lg font-semibold mb-6 text-white">Navigation</h4>
-              <ul className="space-y-3">
-                <li><Link href="/" className="text-gray-400 hover:text-amber-400 transition-colors duration-300">Home</Link></li>
-                <li><Link href="/menu" className="text-gray-400 hover:text-amber-400 transition-colors duration-300">Our Menu</Link></li>
-                <li><Link href="/about" className="text-gray-400 hover:text-amber-400 transition-colors duration-300">Our Chefs</Link></li>
-                <li><Link href="/sustainability" className="text-gray-400 hover:text-amber-400 transition-colors duration-300">Sustainability</Link></li>
-                <li><Link href="/contact" className="text-gray-400 hover:text-amber-400 transition-colors duration-300">Contact Us</Link></li>
+              <h4 className="text-lg font-semibold mb-4 text-gray-900">Navigation</h4>
+              <ul className="space-y-2">
+                <li><Link href="/" className="text-gray-600 hover:text-amber-600 transition-colors duration-300 text-sm">Home</Link></li>
+                <li><Link href="/menu" className="text-gray-600 hover:text-amber-600 transition-colors duration-300 text-sm">Our Menu</Link></li>
+                <li><Link href="/about" className="text-gray-600 hover:text-amber-600 transition-colors duration-300 text-sm">Our Chefs</Link></li>
+                <li><Link href="/contact" className="text-gray-600 hover:text-amber-600 transition-colors duration-300 text-sm">Contact Us</Link></li>
               </ul>
             </div>
-
             {/* Legal */}
             <div>
-              <h4 className="text-lg font-semibold mb-6 text-white">Legal</h4>
-              <ul className="space-y-3">
-                <li><Link href="/privacy" className="text-gray-400 hover:text-amber-400 transition-colors duration-300">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="text-gray-400 hover:text-amber-400 transition-colors duration-300">Terms of Service</Link></li>
-                <li><Link href="/cancellation" className="text-gray-400 hover:text-amber-400 transition-colors duration-300">Cancellation Policy</Link></li>
-                <li><Link href="/faq" className="text-gray-400 hover:text-amber-400 transition-colors duration-300">FAQ</Link></li>
+              <h4 className="text-lg font-semibold mb-4 text-gray-900">Legal</h4>
+              <ul className="space-y-2">
+                <li><Link href="/privacy" className="text-gray-600 hover:text-amber-600 transition-colors duration-300 text-sm">Privacy Policy</Link></li>
+                <li><Link href="/terms" className="text-gray-600 hover:text-amber-600 transition-colors duration-300 text-sm">Terms of Service</Link></li>
+                <li><Link href="/faq" className="text-gray-600 hover:text-amber-600 transition-colors duration-300 text-sm">FAQ</Link></li>
               </ul>
             </div>
-
             {/* Contact */}
             <div>
-              <h4 className="text-lg font-semibold mb-6 text-white">Contact Us</h4>
-              <div className="space-y-4">
+              <h4 className="text-lg font-semibold mb-4 text-gray-900">Contact Us</h4>
+              <div className="space-y-3">
                 <div className="flex items-start space-x-3">
-                  <MapPin className="w-5 h-5 text-amber-400 mt-1 flex-shrink-0" />
-                  <p className="text-gray-400">123 Gourmet Lane, Colombo 03, Sri Lanka</p>
+                  <MapPin className="w-4 h-4 text-amber-600 mt-1 flex-shrink-0" />
+                  <p className="text-gray-600 text-sm"> Jaffna, Sri Lanka</p>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <Phone className="w-5 h-5 text-amber-400 flex-shrink-0" />
-                  <p className="text-gray-400">+94 76 123 4567</p>
+                  <Phone className="w-4 h-4 text-amber-600 flex-shrink-0" />
+                  <p className="text-gray-600 text-sm">+94 76 123 4567</p>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <Mail className="w-5 h-5 text-amber-400 flex-shrink-0" />
-                  <p className="text-gray-400">hello@epicurean.lk</p>
-                </div>
-              </div>
-
-              {/* Newsletter */}
-              <div className="mt-8">
-                <h5 className="text-sm font-semibold text-white mb-3">JOIN OUR NEWSLETTER</h5>
-                <div className="flex">
-                  <input 
-                    type="email" 
-                    placeholder="Your email address" 
-                    className="px-4 py-2 rounded-l-lg bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500 w-full"
-                  />
-                  <button className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-r-lg transition-colors">
-                    Subscribe
-                  </button>
+                  <Mail className="w-4 h-4 text-amber-600 flex-shrink-0" />
+                  <p className="text-gray-600 text-sm">hello@gourmeteats.lk</p>
                 </div>
               </div>
             </div>
           </div>
-
-          <div className="border-t border-gray-800 mt-12 pt-8 text-center">
-            <p className="text-gray-500 text-sm">
-              © {new Date().getFullYear()} Epicurean. All rights reserved. Crafted with passion in Sri Lanka.
+          <div className="border-t border-amber-200 mt-8 pt-6 text-center">
+            <p className="text-gray-600 text-sm">
+              © {new Date().getFullYear()} GourmetEats. All rights reserved. Crafted with passion in Sri Lanka.
             </p>
           </div>
         </div>

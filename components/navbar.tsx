@@ -1,9 +1,11 @@
-'use client'
+"use client";
 
+import { Menu } from 'lucide-react'
+import Image from 'next/image'
 import { useSession, signOut } from 'next-auth/react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ShoppingCart, User, LogOut, Settings } from 'lucide-react'
+import { ShoppingCart, User, LogOut, Settings, Home, Info, UtensilsCrossed, Phone } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,17 +24,76 @@ export function Navbar({ cartItemsCount = 0 }: NavbarProps) {
     signOut({ callbackUrl: '/auth/signin' })
   }
 
+  const navigationItems = [
+    { href: '/', label: 'Home', icon: Home },
+    { href: '/about', label: 'About', icon: Info },
+    { href: '/menu', label: 'Food Menu', icon: UtensilsCrossed },
+    { href: '/contact', label: 'Contact', icon: Phone },
+  ]
+
   return (
     <nav className="bg-white shadow-sm border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
+          {/* Logo Section */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">F</span>
+            <div className="w-8 h-8 relative">
+              <Image
+                src="./logo.png"
+                alt="FoodOrder Logo"
+                fill
+                className="object-contain"
+              />
             </div>
-            <span className="text-xl font-bold text-gray-900">FoodOrder</span>
+            <span className="font-bold text-xl text-gray-800 hidden sm:block">
+              FoodOrder
+            </span>
           </Link>
 
+          {/* Navigation Links - Middle Section */}
+          <div className="hidden md:flex items-center space-x-1">
+            {navigationItems.map((item) => {
+              const IconComponent = item.icon
+              return (
+                <Link key={item.href} href={item.href}>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="flex items-center space-x-2 text-gray-700 hover:text-orange-600 hover:bg-orange-50 transition-colors duration-200"
+                  >
+                    <IconComponent className="h-4 w-4" />
+                    <span>{item.label}</span>
+                  </Button>
+                </Link>
+              )
+            })}
+          </div>
+
+          {/* Mobile Navigation Menu */}
+          <div className="md:hidden">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                {navigationItems.map((item) => {
+                  const IconComponent = item.icon
+                  return (
+                    <DropdownMenuItem key={item.href} asChild>
+                      <Link href={item.href} className="cursor-pointer flex items-center">
+                        <IconComponent className="h-4 w-4 mr-2" />
+                        {item.label}
+                      </Link>
+                    </DropdownMenuItem>
+                  )
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          {/* User Actions Section */}
           <div className="flex items-center space-x-4">
             {session ? (
               <>
@@ -46,12 +107,11 @@ export function Navbar({ cartItemsCount = 0 }: NavbarProps) {
                     )}
                   </Button>
                 </Link>
-
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm">
                       <User className="h-5 w-5 mr-2" />
-                      {session.user.name}
+                      <span className="hidden sm:inline">{session.user.name}</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
