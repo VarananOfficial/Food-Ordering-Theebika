@@ -16,10 +16,11 @@ import {
 import logo from '../app/public/logo.png';
 
 interface NavbarProps {
-  cartItemsCount?: number
+  cartItemsCount?: number,
+  selected?: string
 }
 
-export function Navbar({ cartItemsCount = 0 }: NavbarProps) {
+export function Navbar({ cartItemsCount = 0, selected = "Home" }: NavbarProps) {
   const { data: session } = useSession()
 
   const handleSignOut = () => {
@@ -32,6 +33,10 @@ export function Navbar({ cartItemsCount = 0 }: NavbarProps) {
     { href: '/menu', label: 'Food Menu', icon: UtensilsCrossed },
     { href: '/contact', label: 'Contact', icon: Phone },
   ]
+
+  const isActive = (itemLabel: string) => {
+    return selected === itemLabel
+  }
 
   return (
     <nav className="bg-white shadow-sm border-b">
@@ -47,21 +52,23 @@ export function Navbar({ cartItemsCount = 0 }: NavbarProps) {
                 className="object-contain"
               />
             </div>
-            {/* <span className="font-bold text-xl text-gray-800 hidden sm:block">
-              FoodOrder
-            </span> */}
           </Link>
 
           {/* Navigation Links - Middle Section */}
           <div className="hidden md:flex items-center space-x-1">
             {navigationItems.map((item) => {
               const IconComponent = item.icon
+              const active = isActive(item.label)
               return (
                 <Link key={item.href} href={item.href}>
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="flex items-center space-x-2 text-gray-700 hover:text-orange-600 hover:bg-orange-50 transition-colors duration-200"
+                    className={`flex items-center space-x-2 transition-colors duration-200 ${
+                      active 
+                        ? 'text-orange-600 bg-orange-50 border-b-2 border-orange-600' 
+                        : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50'
+                    }`}
                   >
                     <IconComponent className="h-4 w-4" />
                     <span>{item.label}</span>
@@ -82,9 +89,15 @@ export function Navbar({ cartItemsCount = 0 }: NavbarProps) {
               <DropdownMenuContent align="end" className="w-48">
                 {navigationItems.map((item) => {
                   const IconComponent = item.icon
+                  const active = isActive(item.label)
                   return (
                     <DropdownMenuItem key={item.href} asChild>
-                      <Link href={item.href} className="cursor-pointer flex items-center">
+                      <Link 
+                        href={item.href} 
+                        className={`cursor-pointer flex items-center ${
+                          active ? 'text-orange-600 bg-orange-50' : ''
+                        }`}
+                      >
                         <IconComponent className="h-4 w-4 mr-2" />
                         {item.label}
                       </Link>

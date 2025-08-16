@@ -9,6 +9,7 @@ import Link from 'next/link'
 import { toast, Toaster } from 'sonner'
 import { ChefHat, Clock, Leaf, Sparkles, Star, Utensils } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { Navbar } from '@/components/navbar'
 
 interface Food {
   id: string
@@ -89,6 +90,7 @@ export default function FoodMenuPage() {
 
   return (
     <div className="bg-white">
+      <Navbar selected="Food Menu" cartItemsCount={3} />
       <section className="py-12 bg-white" id="menu">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {error && (

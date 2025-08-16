@@ -1,9 +1,12 @@
 import React from 'react';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { Navbar } from '@/components/navbar'
 
 const ContactPage = () => {
   return (
-    <section className="bg-gray-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div>
+      <Navbar selected="Contact" cartItemsCount={3} />
+       <section className="bg-gray-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Page Heading */}
         <h1 className="text-4xl font-bold text-center text-orange-600 mb-10">
@@ -92,6 +95,8 @@ const ContactPage = () => {
         </div>
       </div>
     </section>
+    </div>
+   
   );
 };
 

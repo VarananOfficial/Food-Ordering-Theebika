@@ -4,10 +4,12 @@ import image1 from '../public/img1.jpg'
 import image2 from '../public/img2.jpg'
 import image3 from '../public/img3.jpg'
 import { FaAward, FaLeaf, FaWineGlassAlt, FaUtensils } from 'react-icons/fa'
+import { Navbar } from '@/components/navbar'
 
 const AboutPage = () => {
   return (
     <div className="bg-white">
+      <Navbar selected="About" cartItemsCount={3} />
       {/* Banner Image Section */}
       <section className="relative h-96 w-full">
         <Image 
