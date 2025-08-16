@@ -70,7 +70,7 @@ export default function SignUp() {
               className="rounded-lg"
             />
           </div>
-          <CardTitle className="text-2xl font-bold">Create your account</CardTitle>
+          <CardTitle className="text-2xl font-bold">Create your account </CardTitle>
           <CardDescription>
             Enter your information to get started
           </CardDescription>
