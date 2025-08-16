@@ -78,7 +78,7 @@ export default function Cart() {
 
   return (
     <div>
-      <Navbar cartItemsCount={getTotalItems()} />
+      {/* <Navbar cartItemsCount={getTotalItems()} /> */}
       <Toaster position="top-center" />
       
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
