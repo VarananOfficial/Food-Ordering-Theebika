@@ -33,23 +33,50 @@ interface Category {
 }
 
 // Food Form Component
-function FoodForm({ food, onSuccess, onCancel }: {
-  food: Food | null,
-  onSuccess: () => void,
-  onCancel: () => void
+// Replace the FoodForm component in your app/admin/foods/page.tsx with this fixed version:
+
+function FoodForm({ food, onSuccess, onCancel }: { 
+  food: Food | null, 
+  onSuccess: () => void, 
+  onCancel: () => void 
 }) {
+  // Initialize form data with proper handling of edit mode
   const [formData, setFormData] = useState({
-    name: food?.name || '',
-    description: food?.description || '',
-    price: food?.price?.toString() || '',
-    image_path: food?.image_path || food?.imageUrl || '',
-    category_id: food?.category_id || ''
+    name: '',
+    description: '',
+    price: '',
+    image_path: '',
+    category_id: ''
   })
+  
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [loadingCategories, setLoadingCategories] = useState(true)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Populate form when editing
+  useEffect(() => {
+    if (food) {
+      console.log('Editing food:', food)
+      setFormData({
+        name: food.name || '',
+        description: food.description || '',
+        price: food.price?.toString() || '',
+        image_path: food.image_path || food.imageUrl || '',
+        category_id: food.category_id || ''
+      })
+    } else {
+      // Reset form for new food
+      setFormData({
+        name: '',
+        description: '',
+        price: '',
+        image_path: '',
+        category_id: ''
+      })
+    }
+  }, [food])
 
   useEffect(() => {
     fetchCategories()
@@ -76,7 +103,7 @@ function FoodForm({ food, onSuccess, onCancel }: {
   }
 
   const handleCategoryChange = (value: string) => {
-    setFormData(prev => ({ ...prev, category_id: value }))
+    setFormData(prev => ({ ...prev, category_id: value === "no-category" ? "" : value }))
   }
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,21 +143,23 @@ function FoodForm({ food, onSuccess, onCancel }: {
       fileInputRef.current.value = ''
     }
   }
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
+    
     if (!formData.name.trim() || !formData.description.trim() || !formData.price) {
       toast.error('Name, description, and price are required')
       return
     }
 
-    if (isNaN(parseFloat(formData.price)) || parseFloat(formData.price) < 0) {
+    const priceValue = parseFloat(formData.price)
+    if (isNaN(priceValue) || priceValue < 0) {
       toast.error('Please enter a valid price (0 or greater)')
       return
     }
 
     setLoading(true)
+    
     try {
       const url = food?.id ? `/api/foods/${food.id}` : '/api/foods'
       const method = food?.id ? 'PUT' : 'POST'
@@ -139,58 +168,34 @@ function FoodForm({ food, onSuccess, onCancel }: {
       const dataToSend = {
         name: formData.name.trim(),
         description: formData.description.trim(),
-        price: parseFloat(formData.price),
+        price: priceValue,
         image_path: formData.image_path || '',
-        category_id: formData.category_id === 'no-category' ? '' : formData.category_id
+        category_id: formData.category_id === 'no-category' ? '' : (formData.category_id || '')
       }
 
-      console.log('Sending data:', dataToSend) // Debug log
+      console.log(`${method} request to ${url}:`, dataToSend)
 
       const response = await fetch(url, {
         method,
-        headers: {
+        headers: { 
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(dataToSend)
       })
 
-      // Check if response is ok before trying to parse JSON
       if (response.ok) {
-        // Try to parse response, but handle if it's empty
-        let result;
-        const contentType = response.headers.get('content-type')
-        if (contentType && contentType.includes('application/json')) {
-          result = await response.json()
-        } else {
-          // If no JSON response, just consider it successful
-          result = { success: true }
-        }
-
+        const result = await response.json()
+        console.log('Food saved successfully:', result)
         toast.success(`Food item ${food?.id ? 'updated' : 'created'} successfully`)
         onSuccess()
       } else {
-        // Try to get error message from response
         let errorMessage = 'Failed to save food item'
-
         try {
-          const contentType = response.headers.get('content-type')
-          if (contentType && contentType.includes('application/json')) {
-            const error = await response.json()
-            errorMessage = error.error || error.message || errorMessage
-          } else {
-            // If response is not JSON, try to get text
-            const text = await response.text()
-            if (text) {
-              errorMessage = `Server error: ${text}`
-            } else {
-              errorMessage = `Server error: ${response.status} ${response.statusText}`
-            }
-          }
-        } catch (parseError) {
-          console.error('Error parsing response:', parseError)
+          const errorData = await response.json()
+          errorMessage = errorData.error || errorMessage
+        } catch {
           errorMessage = `Server error: ${response.status} ${response.statusText}`
         }
-
         toast.error(errorMessage)
         console.error('API Error:', errorMessage)
       }
@@ -206,7 +211,7 @@ function FoodForm({ food, onSuccess, onCancel }: {
     <Card className="shadow-lg">
       <CardHeader className="bg-gradient-to-r from-orange-50 to-red-50 border-b">
         <CardTitle className="text-xl">
-          {food?.id ? 'Edit Food Item' : 'Add New Food Item'}
+          {food?.id ? `Edit Food Item: ${food.name}` : 'Add New Food Item'}
         </CardTitle>
       </CardHeader>
       <CardContent className="p-6">
@@ -240,7 +245,7 @@ function FoodForm({ food, onSuccess, onCancel }: {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="price">Price ($) *</Label>
+                  <Label htmlFor="price">Price (LKR) *</Label>
                   <div className="relative">
                     <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                     <Input
@@ -260,9 +265,9 @@ function FoodForm({ food, onSuccess, onCancel }: {
 
                 <div>
                   <Label htmlFor="category">Category</Label>
-                  <Select
-                    value={formData.category_id || "no-category"}
-                    onValueChange={(value) => handleCategoryChange(value === "no-category" ? "" : value)}
+                  <Select 
+                    value={formData.category_id || "no-category"} 
+                    onValueChange={handleCategoryChange}
                     disabled={loadingCategories}
                   >
                     <SelectTrigger>
