@@ -1,26 +1,43 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "mysql"
-  url      = "mysql://root@localhost:3306/food_ordering"
+  url      = env("DATABASE_URL")
 }
 
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 model User {
   id        String   @id @default(cuid())
   name      String
   email     String   @unique
   password  String
-  role      String   @default("customer") // customer, admin
+  role      String   @default("customer")
   createdAt DateTime @default(now())
   orders    Order[]
 
   @@map("users")
+}
+
+model FoodCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  imageUrl    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  foods       Food[]
+
+  @@map("food_categories")
 }
 
 model Food {
@@ -28,8 +45,10 @@ model Food {
   name        String
   description String      @db.Text
   price       Float
-  imageUrl    String
+  imageUrl    String      
+  categoryId  String
   createdAt   DateTime    @default(now())
+  category    FoodCategory @relation(fields: [categoryId], references: [id], onUpdate: Cascade)
   orderItems  OrderItem[]
 
   @@map("foods")
@@ -41,7 +60,7 @@ model Order {
   totalPrice Float
   status     String      @default("Pending")
   createdAt  DateTime    @default(now())
-  user       User        @relation(fields: [userId], references: [id])
+  user       User        @relation(fields: [userId], references: [id], onUpdate: Cascade)
   orderItems OrderItem[]
 
   @@map("orders")
@@ -52,8 +71,8 @@ model OrderItem {
   orderId  String
   foodId   String
   quantity Int
-  order    Order  @relation(fields: [orderId], references: [id])
-  food     Food   @relation(fields: [foodId], references: [id])
+  order    Order  @relation(fields: [orderId], references: [id], onUpdate: Cascade)
+  food     Food   @relation(fields: [foodId], references: [id], onUpdate: Cascade)
 
   @@map("order_items")
 }
