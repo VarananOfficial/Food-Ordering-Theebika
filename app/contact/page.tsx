@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { Phone as PhoneIcon, Mail as MailIcon, MapPin as MapPinIcon, Clock as ClockIcon } from 'lucide-react';
 import { Navbar } from '@/components/navbar'
 
 const ContactPage = () => {
@@ -23,21 +23,21 @@ const ContactPage = () => {
 
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <MapPin className="text-orange-500" />
+                <MapPinIcon className="text-orange-500" />
                 <span className="text-gray-700">
                   Jaffna, Sri Lanka
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <Phone className="text-orange-500" />
+                <PhoneIcon className="text-orange-500" />
                 <span className="text-gray-700">+94 77 123 4567</span>
               </div>
               <div className="flex items-center gap-3">
-                <Mail className="text-orange-500" />
+                <MailIcon className="text-orange-500" />
                 <span className="text-gray-700">hello@gourmeteats.lk` </span>
               </div>
               <div className="flex items-center gap-3">
-                <Clock className="text-orange-500" />
+                <ClockIcon className="text-orange-500" />
                 <span className="text-gray-700">Mon-Sun: 10:00 AM - 11:00 PM</span>
               </div>
             </div>

@@ -26,10 +26,10 @@ interface Category {
 }
 
 // Category Form Component
-function CategoryForm({ category, onSuccess, onCancel }: { 
-  category: Category | null, 
-  onSuccess: () => void, 
-  onCancel: () => void 
+function CategoryForm({ category, onSuccess, onCancel }: {
+  category: Category | null,
+  onSuccess: () => void,
+  onCancel: () => void
 }) {
   const [formData, setFormData] = useState({
     name: category?.name || '',
@@ -85,7 +85,7 @@ function CategoryForm({ category, onSuccess, onCancel }: {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!formData.name.trim()) {
       toast.error('Category name is required')
       return
@@ -248,14 +248,25 @@ export default function AdminCategories() {
 
   const fetchCategories = async () => {
     try {
+      console.log('Starting to fetch categories...')
+
       const response = await fetch('/api/categories')
+      console.log('Response status:', response.status)
+      console.log('Response ok:', response.ok)
+
       if (response.ok) {
         const data = await response.json()
+        console.log('Fetched categories data:', data)
         setCategories(data)
+      } else {
+        // Log the error response
+        const errorText = await response.text()
+        
+        toast.error(`Failed to fetch categories: ${response.status}`)
       }
     } catch (error) {
-      console.error('Error fetching categories:', error)
-      toast.error('Failed to fetch categories')
+      console.error('Network error fetching categories:', error)
+      toast.error('Network error: Failed to fetch categories')
     } finally {
       setLoading(false)
     }
@@ -317,7 +328,7 @@ export default function AdminCategories() {
     <div>
       <AdminNavbar />
       <Toaster position="top-center" />
-      
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
           <Link href="/admin" className="flex items-center text-gray-600 hover:text-gray-900 mb-4">
@@ -395,8 +406,8 @@ export default function AdminCategories() {
                     <Tag className="h-16 w-16 text-gray-400" />
                   </div>
                 )}
-                <Badge 
-                  variant={category.isActive ? "default" : "secondary"} 
+                <Badge
+                  variant={category.isActive ? "default" : "secondary"}
                   className="absolute top-2 right-2"
                 >
                   {category.isActive ? 'Active' : 'Inactive'}
