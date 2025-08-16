@@ -939,7 +939,7 @@ const Home: React.FC = () => {
               <div className="space-y-3">
                 <div className="flex items-start space-x-3">
                   <MapPin className="w-4 h-4 text-amber-600 mt-1 flex-shrink-0" />
-                  <p className="text-gray-600 text-sm"> Jaffna, Sri Lanka</p>
+                  <p className="text-gray-600 text-sm"> Jaffna,Sri Lanka</p>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Phone className="w-4 h-4 text-amber-600 flex-shrink-0" />
