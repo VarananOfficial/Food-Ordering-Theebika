@@ -9,6 +9,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast, Toaster } from 'sonner'
+import logo from "@/app/public/logo.png";
+import Image from 'next/image';
 
 export default function SignIn() {
   const [email, setEmail] = useState('')
@@ -46,8 +48,12 @@ export default function SignIn() {
       <Toaster position="top-center" />
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-xl">F</span>
+          <div className="w-40 h-30 mx-auto mb-4">
+            <Image
+              src={logo}
+              alt="Logo"
+              className="rounded-lg"
+            />
           </div>
           <CardTitle className="text-2xl font-bold">Sign in to your account</CardTitle>
           <CardDescription>
