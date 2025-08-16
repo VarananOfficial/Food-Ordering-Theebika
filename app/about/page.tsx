@@ -3,10 +3,21 @@ import Image from 'next/image'
 import image1 from '../public/img1.jpg'
 import image2 from '../public/img2.jpg'
 import image3 from '../public/img3.jpg'
+import img6 from '../public/img6.jpg'
+import img7 from '../public/img7.jpg'
+import img8 from '../public/img9.jpg'
+import img9 from '../public/img10.jpg'
 import { FaAward, FaLeaf, FaWineGlassAlt, FaUtensils } from 'react-icons/fa'
 import { Navbar } from '@/components/navbar'
 
 const AboutPage = () => {
+  const galleryImages = [
+    { src: img6, alt: "Elegant dining room with chandelier" },
+    { src: img7, alt: "Chef preparing signature dish" },
+    { src: img8, alt: "Wine cellar collection" },
+    { src: img9, alt: "Outdoor terrace dining" }
+  ]
+
   return (
     <div className="bg-white">
       <Navbar selected="About" cartItemsCount={3} />
@@ -26,7 +37,6 @@ const AboutPage = () => {
           </h1>
         </div>
       </section>
-
       {/* History Section */}
       <section className="py-20 px-4 max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -61,7 +71,6 @@ const AboutPage = () => {
           </div>
         </div>
       </section>
-
       {/* Philosophy Section */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4">
@@ -103,7 +112,6 @@ const AboutPage = () => {
           </div>
         </div>
       </section>
-
       {/* Chef Section */}
       <section className="py-20 px-4 max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -131,7 +139,6 @@ const AboutPage = () => {
           </div>
         </div>
       </section>
-
       {/* Testimonials */}
       <section className="py-20 bg-gray-900 text-white">
         <div className="max-w-7xl mx-auto px-4">
@@ -166,22 +173,26 @@ const AboutPage = () => {
           </div>
         </div>
       </section>
-
       {/* Gallery Preview */}
       <section className="py-16 px-4 max-w-7xl mx-auto">
         <h2 className="text-3xl md:text-4xl font-serif font-bold text-center text-gray-800 mb-12">
           Our Restaurant
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map((item) => (
-            <div key={item} className="relative h-48 md:h-64 rounded-xl overflow-hidden group">
+          {galleryImages.map((image, index) => (
+            <div key={index} className="relative h-48 md:h-64 rounded-xl overflow-hidden group cursor-pointer">
               <Image
-                src={`/gallery-${item}.jpg`}
-                alt={`Restaurant gallery ${item}`}
+                src={image.src}
+                alt={image.alt}
                 fill
-                className="object-cover transition-transform group-hover:scale-105"
+                className="object-cover transition-transform duration-300 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors" />
+              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/50 transition-all duration-300" />
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="bg-white/90 px-4 py-2 rounded-lg backdrop-blur-sm">
+                  <p className="text-gray-800 font-medium text-sm text-center">{image.alt}</p>
+                </div>
+              </div>
             </div>
           ))}
         </div>

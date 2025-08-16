@@ -44,14 +44,14 @@ export function Navbar({ cartItemsCount = 0, selected = "Home" }: NavbarProps) {
         <div className="flex justify-between items-center h-16">
           {/* Logo Section */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-28 h-20 relative">
-              <Image
-                src={logo}
-                alt="FoodOrder Logo"
-                fill
-                className="object-contain"
-              />
-            </div>
+            <div className="w-[200px] h-[140px] relative">  {/* Custom pixel values */}
+  <Image
+    src={logo}
+    alt="FoodOrder Logo"
+    fill
+    className="object-contain"
+  />
+</div>
           </Link>
 
           {/* Navigation Links - Middle Section */}

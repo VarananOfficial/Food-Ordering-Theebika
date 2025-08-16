@@ -32,6 +32,8 @@ import {
 } from 'lucide-react'
 import { FC } from 'react'
 import { motion } from 'framer-motion'
+import logo from '../app/public/logo1.png'
+
 interface Food {
   id: string
   name: string
@@ -42,11 +44,13 @@ interface Food {
   rating?: number
   prepTime?: string
 }
+
 interface Feature {
   icon: LucideIcon
   title: string
   description: string
 }
+
 interface Testimonial {
   name: string
   role: string
@@ -54,24 +58,29 @@ interface Testimonial {
   rating: number
   avatar: string
 }
+
 interface Stat {
   icon: LucideIcon
   value: string
   label: string
 }
+
 const Home: React.FC = () => {
   const { data: session, status } = useSession()
   const [foods, setFoods] = useState<Food[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   const { addToCart, getTotalItems } = useCart()
+
   useEffect(() => {
     fetchFoods()
   }, [])
+
   const fetchFoods = async (): Promise<void> => {
     try {
       setError(null)
       const response = await fetch('/api/foods')
+      
       if (response.ok) {
         const data = await response.json()
         let foodsArray: Food[] = []
@@ -89,6 +98,7 @@ const Home: React.FC = () => {
           setError('Unexpected data format from server')
           return
         }
+
         // Enhance food items with additional data for demo
         const enhancedFoods = foodsArray.map(food => ({
           ...food,
@@ -96,6 +106,7 @@ const Home: React.FC = () => {
           rating: Number((Math.random() * 1 + 4).toFixed(1)),
           prepTime: `${Math.floor(Math.random() * 20 + 10)}-${Math.floor(Math.random() * 20 + 30)} mins`
         }))
+        
         setFoods(enhancedFoods)
       } else {
         const errorText = await response.text()
@@ -107,6 +118,7 @@ const Home: React.FC = () => {
       setLoading(false)
     }
   }
+
   const handleAddToCart = (food: Food): void => {
     if (!session) {
       toast.error('Please sign in to add items to cart')
@@ -115,6 +127,7 @@ const Home: React.FC = () => {
     addToCart(food)
     toast.success(`${food.name} added to cart!`)
   }
+
   if (status === 'loading') {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
@@ -126,6 +139,7 @@ const Home: React.FC = () => {
       </div>
     )
   }
+
   const features: Feature[] = [
     {
       icon: Clock,
@@ -148,6 +162,7 @@ const Home: React.FC = () => {
       description: "Premium ingredients and expert preparation"
     }
   ]
+
   const testimonials: Testimonial[] = [
     {
       name: "Sarah Johnson",
@@ -192,17 +207,20 @@ const Home: React.FC = () => {
       avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=64&h=64&fit=crop&crop=face"
     }
   ]
+
   const stats: Stat[] = [
     { icon: Users, value: "50K+", label: "Satisfied Customers" },
     { icon: Utensils, value: "200+", label: "Gourmet Dishes" },
     { icon: Star, value: "4.9", label: "Average Rating" },
     { icon: ShoppingBag, value: "98%", label: "Repeat Orders" }
   ]
+
   return (
     <div className="bg-white antialiased">
       {/* <Navbar cartItemsCount={session ? getTotalItems() : 0} /> */}
       <Navbar/>
       <Toaster position="top-center" richColors />
+
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-amber-50 to-orange-50 opacity-90"></div>
@@ -240,6 +258,7 @@ const Home: React.FC = () => {
                   </p>
                 </>
               )}
+
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 {!session ? (
                   <>
@@ -267,6 +286,7 @@ const Home: React.FC = () => {
                 )}
               </div>
             </motion.div>
+
             <motion.div 
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -291,6 +311,7 @@ const Home: React.FC = () => {
           </div>
         </div>
       </section>
+
       {/* Enhanced Features Section */}
       <section className="py-16 bg-white relative overflow-hidden">
         {/* Animated Background Patterns */}
@@ -420,7 +441,6 @@ const Home: React.FC = () => {
                     }}
                     transition={{ duration: 2, repeat: Infinity, delay: index * 0.5 }}
                   />
-                  
                   <motion.div
                     whileHover={{ 
                       rotate: 360,
@@ -430,7 +450,6 @@ const Home: React.FC = () => {
                   >
                     <feature.icon className="w-6 h-6 text-amber-600 drop-shadow-sm" />
                   </motion.div>
-
                   {/* Sparkle Effect */}
                   <motion.div
                     className="absolute top-1 right-1 opacity-0 group-hover:opacity-100"
@@ -517,6 +536,7 @@ const Home: React.FC = () => {
           </motion.div>
         </div>
       </section>
+
       {/* Enhanced Stats Section */}
       <section className="py-16 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 relative overflow-hidden">
         {/* Animated Background Elements */}
@@ -533,13 +553,13 @@ const Home: React.FC = () => {
               key={i}
               className="absolute"
               initial={{ 
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight,
+                x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+                y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000),
                 opacity: 0
               }}
               animate={{ 
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight,
+                x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+                y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000),
                 opacity: [0, 1, 0]
               }}
               transition={{ 
@@ -628,7 +648,6 @@ const Home: React.FC = () => {
                     }}
                     transition={{ duration: 3, repeat: Infinity }}
                   />
-                  
                   <motion.div
                     whileHover={{ 
                       rotate: 360,
@@ -657,7 +676,6 @@ const Home: React.FC = () => {
                   >
                     {stat.value}
                   </motion.span>
-                  
                   {/* Sparkle effect on hover */}
                   <motion.div
                     className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100"
@@ -738,6 +756,7 @@ const Home: React.FC = () => {
           </motion.div>
         </div>
       </section>
+
       {/* Menu Section */}
       <section className="py-20 bg-white" id="menu">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -749,6 +768,7 @@ const Home: React.FC = () => {
               Chef-curated dishes featuring the finest seasonal ingredients
             </p>
           </div>
+
           {/* Error Display */}
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl mb-8 shadow-sm max-w-2xl mx-auto">
@@ -760,6 +780,7 @@ const Home: React.FC = () => {
               </div>
             </div>
           )}
+
           {/* Loading State */}
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -789,6 +810,7 @@ const Home: React.FC = () => {
                   </Button>
                 ))}
               </div>
+
               {/* Food Items Grid */}
               {foods.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -820,6 +842,7 @@ const Home: React.FC = () => {
           )}
         </div>
       </section>
+
       {/* Testimonials Section with Moving Animation */}
       <section className="py-20 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -884,83 +907,257 @@ const Home: React.FC = () => {
           </div>
         </div>
       </section>
-      
-      {/* Compact Footer */}
-      <footer className="bg-gradient-to-br from-amber-50 to-orange-50 text-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Brand Info */}
-            <div className="space-y-4">
-              <div className="flex items-center">
-                {/* <ChefHat className="w-8 h-8 text-amber-400 mr-2" /> */}
-                <img
-                    src="/logo.png"
-                    alt="GourmetEats Logo"
-                    className="w-8 h-8 mr-2 object-contain"
+
+      {/* Enhanced Footer */}
+      <footer className="bg-gradient-to-br from-amber-50 to-orange-50 text-gray-800 relative overflow-hidden">
+        {/* Decorative Background Elements */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-10 left-10 w-64 h-64 bg-gradient-to-br from-amber-200/30 to-orange-200/30 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-10 right-10 w-80 h-80 bg-gradient-to-tl from-orange-200/40 to-amber-200/40 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+            {/* Enhanced Brand Info */}
+            <div className="space-y-6 flex flex-col items-center md:items-start">
+              {/* Brand Title */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <h3 className="text-2xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-3">
+                  GourmetEats
+                </h3>
+              </motion.div>
+
+              {/* Description */}
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                viewport={{ once: true }}
+                className="text-gray-700 leading-relaxed text-base text-center md:text-left max-w-sm"
+              >
+                Elevating home dining with chef-crafted meals made from the finest seasonal ingredients. Experience culinary excellence delivered to your doorstep.
+              </motion.p>
+
+              {/* Enhanced Social Icons */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                viewport={{ once: true }}
+                className="flex space-x-4 justify-center md:justify-start"
+              >
+                {[
+                  { icon: Facebook, label: "Facebook" },
+                  { icon: Twitter, label: "Twitter" },
+                  { icon: Instagram, label: "Instagram" }
+                ].map(({ icon: Icon, label }, index) => (
+                  <motion.a 
+                    key={label}
+                    href="#"
+                    whileHover={{ 
+                      scale: 1.1,
+                      y: -2,
+                      transition: { duration: 0.2 }
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                    className="w-12 h-12 bg-gradient-to-br from-white to-amber-50 rounded-full flex items-center justify-center hover:from-amber-500 hover:to-orange-500 hover:text-white transition-all duration-300 shadow-md hover:shadow-lg border border-amber-200 hover:border-transparent group"
+                    aria-label={label}
+                  >
+                    <Icon className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
+                  </motion.a>
+                ))}
+              </motion.div>
+
+              {/* Newsletter Signup */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                viewport={{ once: true }}
+                className="w-full max-w-sm"
+              >
+                <h4 className="text-sm font-semibold text-gray-900 mb-3 text-center md:text-left">Stay Updated</h4>
+                <div className="flex">
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    className="flex-1 px-4 py-2 text-sm border border-amber-200 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                   />
-                
-              </div>
-              <p className="text-gray-600 leading-relaxed text-sm">
-                Elevating home dining with chef-crafted meals made from the finest seasonal ingredients.
-              </p>
-              <div className="flex space-x-3 pt-2">
-                <a href="#" className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center hover:bg-amber-500 hover:text-white transition-colors duration-300">
-                  <Facebook className="w-4 h-4" />
-                </a>
-                <a href="#" className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center hover:bg-amber-500 hover:text-white transition-colors duration-300">
-                  <Twitter className="w-4 h-4" />
-                </a>
-                <a href="#" className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center hover:bg-amber-500 hover:text-white transition-colors duration-300">
-                  <Instagram className="w-4 h-4" />
-                </a>
-              </div>
+                  <button className="px-4 py-2 bg-gradient-to-r from-amber-600 to-orange-600 text-white text-sm font-medium rounded-r-lg hover:from-amber-700 hover:to-orange-700 transition-colors duration-300">
+                    Subscribe
+                  </button>
+                </div>
+              </motion.div>
             </div>
-            {/* Quick Links */}
-            <div>
-              <h4 className="text-lg font-semibold mb-4 text-gray-900">Navigation</h4>
-              <ul className="space-y-2">
-                <li><Link href="/" className="text-gray-600 hover:text-amber-600 transition-colors duration-300 text-sm">Home</Link></li>
-                <li><Link href="/menu" className="text-gray-600 hover:text-amber-600 transition-colors duration-300 text-sm">Our Menu</Link></li>
-                <li><Link href="/about" className="text-gray-600 hover:text-amber-600 transition-colors duration-300 text-sm">Our Chefs</Link></li>
-                <li><Link href="/contact" className="text-gray-600 hover:text-amber-600 transition-colors duration-300 text-sm">Contact Us</Link></li>
+
+            {/* Enhanced Quick Links */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <h4 className="text-lg font-bold text-gray-900 mb-6 relative">
+                Navigation
+                <div className="absolute -bottom-2 left-0 w-12 h-0.5 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"></div>
+              </h4>
+              <ul className="space-y-3">
+                {[
+                  { name: "Home", href: "/" },
+                  { name: "Our Menu", href: "/menu" },
+                  { name: "Our Chefs", href: "/about" },
+                  { name: "Contact Us", href: "/contact" },
+                  { name: "Reservations", href: "/reservations" }
+                ].map((link, index) => (
+                  <motion.li 
+                    key={link.name}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: 0.1 * index }}
+                    viewport={{ once: true }}
+                  >
+                    <Link 
+                      href={link.href} 
+                      className="text-gray-600 hover:text-amber-600 transition-colors duration-300 text-sm flex items-center group"
+                    >
+                      <ArrowRight className="w-3 h-3 mr-2 opacity-0 group-hover:opacity-100 transform -translate-x-2 group-hover:translate-x-0 transition-all duration-300" />
+                      {link.name}
+                    </Link>
+                  </motion.li>
+                ))}
               </ul>
-            </div>
-            {/* Legal */}
-            <div>
-              <h4 className="text-lg font-semibold mb-4 text-gray-900">Legal</h4>
-              <ul className="space-y-2">
-                <li><Link href="/privacy" className="text-gray-600 hover:text-amber-600 transition-colors duration-300 text-sm">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="text-gray-600 hover:text-amber-600 transition-colors duration-300 text-sm">Terms of Service</Link></li>
-                <li><Link href="/faq" className="text-gray-600 hover:text-amber-600 transition-colors duration-300 text-sm">FAQ</Link></li>
+            </motion.div>
+
+            {/* Enhanced Services */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+            >
+              <h4 className="text-lg font-bold text-gray-900 mb-6 relative">
+                Services
+                <div className="absolute -bottom-2 left-0 w-12 h-0.5 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"></div>
+              </h4>
+              <ul className="space-y-3">
+                {[
+                  { name: "Food Delivery", icon: Truck },
+                  { name: "Catering", icon: ChefHat },
+                  { name: "Private Chef", icon: Users },
+                  { name: "Meal Planning", icon: Utensils },
+                  { name: "Gift Cards", icon: Heart }
+                ].map((service, index) => (
+                  <motion.li 
+                    key={service.name}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: 0.1 * index }}
+                    viewport={{ once: true }}
+                    className="flex items-center text-gray-600 hover:text-amber-600 transition-colors duration-300 text-sm group cursor-pointer"
+                  >
+                    <service.icon className="w-4 h-4 mr-3 text-amber-500 group-hover:scale-110 transition-transform duration-200" />
+                    {service.name}
+                  </motion.li>
+                ))}
               </ul>
-            </div>
-            {/* Contact */}
-            <div>
-              <h4 className="text-lg font-semibold mb-4 text-gray-900">Contact Us</h4>
-              <div className="space-y-3">
-                <div className="flex items-start space-x-3">
-                  <MapPin className="w-4 h-4 text-amber-600 mt-1 flex-shrink-0" />
-                  <p className="text-gray-600 text-sm"> Jaffna,Sri Lanka</p>
+            </motion.div>
+
+            {/* Enhanced Contact */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <h4 className="text-lg font-bold text-gray-900 mb-6 relative">
+                Contact Us
+                <div className="absolute -bottom-2 left-0 w-12 h-0.5 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"></div>
+              </h4>
+              <div className="space-y-4">
+                {[
+                  { icon: MapPin, text: "123 Gourmet Street, Jaffna, Sri Lanka", label: "Address" },
+                  { icon: Phone, text: "+94 76 123 4567", label: "Phone" },
+                  { icon: Mail, text: "hello@gourmeteats.lk", label: "Email" }
+                ].map((contact, index) => (
+                  <motion.div 
+                    key={contact.label}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: 0.1 * index }}
+                    viewport={{ once: true }}
+                    className="flex items-start space-x-3 group"
+                  >
+                    <div className="w-8 h-8 bg-gradient-to-br from-amber-100 to-orange-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:from-amber-500 group-hover:to-orange-500 transition-colors duration-300">
+                      <contact.icon className="w-4 h-4 text-amber-600 group-hover:text-white transition-colors duration-300" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">{contact.label}</p>
+                      <p className="text-gray-700 text-sm leading-relaxed">{contact.text}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Operating Hours */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.8 }}
+                viewport={{ once: true }}
+                className="mt-6 p-4 bg-gradient-to-br from-amber-50 to-orange-50 rounded-lg border border-amber-200"
+              >
+                <h5 className="text-sm font-semibold text-gray-900 mb-2 flex items-center">
+                  <Clock className="w-4 h-4 mr-2 text-amber-600" />
+                  Operating Hours
+                </h5>
+                <div className="text-xs text-gray-600 space-y-1">
+                  <div className="flex justify-between">
+                    <span>Mon - Fri:</span>
+                    <span className="font-medium">10:00 AM - 10:00 PM</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Sat - Sun:</span>
+                    <span className="font-medium">9:00 AM - 11:00 PM</span>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-3">
-                  <Phone className="w-4 h-4 text-amber-600 flex-shrink-0" />
-                  <p className="text-gray-600 text-sm">+94 76 123 4567</p>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Mail className="w-4 h-4 text-amber-600 flex-shrink-0" />
-                  <p className="text-gray-600 text-sm">hello@gourmeteats.lk</p>
+              </motion.div>
+            </motion.div>
+          </div>
+
+          {/* Enhanced Bottom Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            viewport={{ once: true }}
+            className="border-t border-amber-200 mt-12 pt-8"
+          >
+            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+              <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6">
+                <p className="text-gray-600 text-sm">
+                  © {new Date().getFullYear()} GourmetEats. All rights reserved.
+                </p>
+                <div className="flex space-x-4 text-xs">
+                  <Link href="/privacy" className="text-gray-500 hover:text-amber-600 transition-colors duration-300">Privacy Policy</Link>
+                  <Link href="/terms" className="text-gray-500 hover:text-amber-600 transition-colors duration-300">Terms of Service</Link>
+                  <Link href="/faq" className="text-gray-500 hover:text-amber-600 transition-colors duration-300">FAQ</Link>
                 </div>
               </div>
+              <div className="flex items-center space-x-2 text-sm text-gray-600">
+                <Heart className="w-4 h-4 text-red-500" />
+                <span>Crafted with passion in Sri Lanka</span>
+              </div>
             </div>
-          </div>
-          <div className="border-t border-amber-200 mt-8 pt-6 text-center">
-            <p className="text-gray-600 text-sm">
-              © {new Date().getFullYear()} GourmetEats. All rights reserved. Crafted with passion in Sri Lanka.
-            </p>
-          </div>
+          </motion.div>
         </div>
       </footer>
     </div>
   )
 }
+
 export default Home;

@@ -25,7 +25,7 @@ const ContactPage = () => {
               <div className="flex items-center gap-3">
                 <MapPin className="text-orange-500" />
                 <span className="text-gray-700">
-                  123 Flavor Street, Colombo, Sri Lanka
+                  Jaffna, Sri Lanka
                 </span>
               </div>
               <div className="flex items-center gap-3">
@@ -34,7 +34,7 @@ const ContactPage = () => {
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="text-orange-500" />
-                <span className="text-gray-700">info@gourmeteats.com</span>
+                <span className="text-gray-700">hello@gourmeteats.lk` </span>
               </div>
               <div className="flex items-center gap-3">
                 <Clock className="text-orange-500" />
