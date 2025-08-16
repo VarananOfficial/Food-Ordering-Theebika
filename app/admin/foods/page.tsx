@@ -33,10 +33,10 @@ interface Category {
 }
 
 // Food Form Component
-function FoodForm({ food, onSuccess, onCancel }: { 
-  food: Food | null, 
-  onSuccess: () => void, 
-  onCancel: () => void 
+function FoodForm({ food, onSuccess, onCancel }: {
+  food: Food | null,
+  onSuccess: () => void,
+  onCancel: () => void
 }) {
   const [formData, setFormData] = useState({
     name: food?.name || '',
@@ -116,17 +116,17 @@ function FoodForm({ food, onSuccess, onCancel }: {
       fileInputRef.current.value = ''
     }
   }
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!formData.name.trim() || !formData.description.trim() || !formData.price) {
       toast.error('Name, description, and price are required')
       return
     }
 
-    if (isNaN(parseFloat(formData.price)) || parseFloat(formData.price) <= 0) {
-      toast.error('Please enter a valid price')
+    if (isNaN(parseFloat(formData.price)) || parseFloat(formData.price) < 0) {
+      toast.error('Please enter a valid price (0 or greater)')
       return
     }
 
@@ -135,25 +135,68 @@ function FoodForm({ food, onSuccess, onCancel }: {
       const url = food?.id ? `/api/foods/${food.id}` : '/api/foods'
       const method = food?.id ? 'PUT' : 'POST'
 
+      // Prepare the data to send
+      const dataToSend = {
+        name: formData.name.trim(),
+        description: formData.description.trim(),
+        price: parseFloat(formData.price),
+        image_path: formData.image_path || '',
+        category_id: formData.category_id === 'no-category' ? '' : formData.category_id
+      }
+
+      console.log('Sending data:', dataToSend) // Debug log
+
       const response = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          price: parseFloat(formData.price)
-        })
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend)
       })
 
+      // Check if response is ok before trying to parse JSON
       if (response.ok) {
+        // Try to parse response, but handle if it's empty
+        let result;
+        const contentType = response.headers.get('content-type')
+        if (contentType && contentType.includes('application/json')) {
+          result = await response.json()
+        } else {
+          // If no JSON response, just consider it successful
+          result = { success: true }
+        }
+
         toast.success(`Food item ${food?.id ? 'updated' : 'created'} successfully`)
         onSuccess()
       } else {
-        const error = await response.json()
-        toast.error(error.error || 'Failed to save food item')
+        // Try to get error message from response
+        let errorMessage = 'Failed to save food item'
+
+        try {
+          const contentType = response.headers.get('content-type')
+          if (contentType && contentType.includes('application/json')) {
+            const error = await response.json()
+            errorMessage = error.error || error.message || errorMessage
+          } else {
+            // If response is not JSON, try to get text
+            const text = await response.text()
+            if (text) {
+              errorMessage = `Server error: ${text}`
+            } else {
+              errorMessage = `Server error: ${response.status} ${response.statusText}`
+            }
+          }
+        } catch (parseError) {
+          console.error('Error parsing response:', parseError)
+          errorMessage = `Server error: ${response.status} ${response.statusText}`
+        }
+
+        toast.error(errorMessage)
+        console.error('API Error:', errorMessage)
       }
     } catch (error) {
       console.error('Error saving food:', error)
-      toast.error('An error occurred while saving')
+      toast.error('Network error: Failed to connect to server')
     } finally {
       setLoading(false)
     }
@@ -217,8 +260,8 @@ function FoodForm({ food, onSuccess, onCancel }: {
 
                 <div>
                   <Label htmlFor="category">Category</Label>
-                  <Select 
-                    value={formData.category_id || "no-category"} 
+                  <Select
+                    value={formData.category_id || "no-category"}
                     onValueChange={(value) => handleCategoryChange(value === "no-category" ? "" : value)}
                     disabled={loadingCategories}
                   >
@@ -435,7 +478,7 @@ export default function AdminFoods() {
     <div>
       <AdminNavbar />
       <Toaster position="top-center" />
-      
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
           <Link href="/admin" className="flex items-center text-gray-600 hover:text-gray-900 mb-4">
@@ -490,7 +533,7 @@ export default function AdminFoods() {
                   />
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <Filter className="h-4 w-4 text-gray-400" />
@@ -526,9 +569,9 @@ export default function AdminFoods() {
                   alt={food.name}
                   fill
                   className="object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src = '/placeholder-food.jpg'
-                  }}
+                // onError={(e) => {
+                //   e.currentTarget.src = '/placeholder-food.jpg'
+                // }}
                 />
                 {food.category_name && (
                   <Badge variant="secondary" className="absolute top-2 left-2 bg-white/90">
@@ -572,8 +615,8 @@ export default function AdminFoods() {
           <Card>
             <CardContent className="text-center py-12">
               <p className="text-gray-500 text-lg mb-4">
-                {foods.length === 0 
-                  ? 'No food items found' 
+                {foods.length === 0
+                  ? 'No food items found'
                   : 'No food items match your current filters'
                 }
               </p>

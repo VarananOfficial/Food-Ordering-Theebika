@@ -30,8 +30,8 @@ CREATE TABLE `foods` (
     `name` VARCHAR(191) NOT NULL,
     `description` TEXT NOT NULL,
     `price` DOUBLE NOT NULL,
-    `imageUrl` VARCHAR(191) NOT NULL,
-    `categoryId` VARCHAR(191) NOT NULL,
+    `imageUrl` VARCHAR(191) NULL,
+    `categoryId` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -59,7 +59,7 @@ CREATE TABLE `order_items` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `foods` ADD CONSTRAINT `foods_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `food_categories`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `foods` ADD CONSTRAINT `foods_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `food_categories`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `orders` ADD CONSTRAINT `orders_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

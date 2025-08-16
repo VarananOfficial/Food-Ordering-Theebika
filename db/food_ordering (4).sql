@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 15, 2025 at 06:18 PM
+-- Generation Time: Aug 16, 2025 at 01:36 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -32,7 +32,8 @@ CREATE TABLE `foods` (
   `name` varchar(191) NOT NULL,
   `description` text NOT NULL,
   `price` double NOT NULL,
-  `imageUrl` varchar(191) NOT NULL,
+  `imageUrl` varchar(191) DEFAULT NULL,
+  `categoryId` varchar(191) DEFAULT NULL,
   `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -40,16 +41,31 @@ CREATE TABLE `foods` (
 -- Dumping data for table `foods`
 --
 
-INSERT INTO `foods` (`id`, `name`, `description`, `price`, `imageUrl`, `createdAt`) VALUES
-('cmecx5j9r000114iijx0b3cfo', 'Classic Burger', 'Juicy beef patty with lettuce, tomato, onion, and our special sauce', 12.99, 'https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg?auto=compress&cs=tinysrgb&w=500', '2025-08-15 14:24:02.511'),
-('cmecx5j9u000214ii9qi3us4s', 'Margherita Pizza', 'Fresh tomatoes, mozzarella cheese, and basil on crispy crust', 15.99, 'https://images.pexels.com/photos/2619967/pexels-photo-2619967.jpeg?auto=compress&cs=tinysrgb&w=500', '2025-08-15 14:24:02.515'),
-('cmecx5j9w000314ii569qqk65', 'Chicken Caesar Salad', 'Grilled chicken breast on fresh romaine lettuce with Caesar dressing', 10.99, 'https://images.pexels.com/photos/2097090/pexels-photo-2097090.jpeg?auto=compress&cs=tinysrgb&w=500', '2025-08-15 14:24:02.517'),
-('cmecx5ja1000414iik0xu6mrp', 'Fish & Chips', 'Beer-battered cod with crispy fries and tartar sauce', 14.99, 'https://images.pexels.com/photos/1885057/pexels-photo-1885057.jpeg?auto=compress&cs=tinysrgb&w=500', '2025-08-15 14:24:02.521'),
-('cmecx5ja3000514iix6233zlz', 'Pasta Carbonara', 'Creamy pasta with bacon, eggs, and parmesan cheese', 13.99, 'https://images.pexels.com/photos/4518843/pexels-photo-4518843.jpeg?auto=compress&cs=tinysrgb&w=500', '2025-08-15 14:24:02.524'),
-('cmecx5ja5000614iigkdgifef', 'Chocolate Brownie', 'Rich chocolate brownie served with vanilla ice cream', 6.99, 'https://images.pexels.com/photos/887853/pexels-photo-887853.jpeg?auto=compress&cs=tinysrgb&w=500', '2025-08-15 14:24:02.526'),
-('cmecx5ja7000714iimmff5yt9', 'Grilled Chicken Sandwich', 'Grilled chicken breast with avocado, lettuce, and chipotle mayo', 11.99, 'https://images.pexels.com/photos/1633578/pexels-photo-1633578.jpeg?auto=compress&cs=tinysrgb&w=500', '2025-08-15 14:24:02.527'),
-('cmecx5ja9000814iig067ewn3', 'Vegetable Stir', 'Fresh vegetables stir-fried with garlic and soy sauce, served with rice', 1000, 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=500', '2025-08-15 14:24:02.530'),
-('cmed10g350003dskbpmpwgxhu', 'Dai Morin', 'Voluptate qui a fuga', 302, 'https://www.zawom.info', '2025-08-15 16:12:03.569');
+INSERT INTO `foods` (`id`, `name`, `description`, `price`, `imageUrl`, `categoryId`, `createdAt`) VALUES
+('cmee65hgm000ye4aana5wydfd', 'sdfgsgf', 'sdgswgrwer', 500, '/uploads/food/food_1755343420378.jpg', NULL, '2025-08-16 11:23:42.875'),
+('cmee6bc4a000ze4aaz4erqpjk', 'asdvse', 'aefwefwe', 699.96, '/uploads/food/food_1755343692063.jpg', NULL, '2025-08-16 11:28:15.761');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `food_categories`
+--
+
+CREATE TABLE `food_categories` (
+  `id` varchar(191) NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `description` varchar(191) DEFAULT NULL,
+  `imageUrl` varchar(191) DEFAULT NULL,
+  `isActive` tinyint(1) NOT NULL DEFAULT 1,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `food_categories`
+--
+
+INSERT INTO `food_categories` (`id`, `name`, `description`, `imageUrl`, `isActive`, `createdAt`) VALUES
+('1', 'aef', 'afcae', 'afaefqewf', 1, '2025-08-16 16:52:17.000');
 
 -- --------------------------------------------------------
 
@@ -65,6 +81,13 @@ CREATE TABLE `orders` (
   `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `userId`, `totalPrice`, `status`, `createdAt`) VALUES
+('cmee6kb4b0011e4aatne0n3h3', '1', 1000, 'Preparing', '2025-08-16 11:35:14.504');
+
 -- --------------------------------------------------------
 
 --
@@ -77,6 +100,13 @@ CREATE TABLE `order_items` (
   `foodId` varchar(191) NOT NULL,
   `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `orderId`, `foodId`, `quantity`) VALUES
+('cmee6kb4c0013e4aa8xgvf37h', 'cmee6kb4b0011e4aatne0n3h3', 'cmee65hgm000ye4aana5wydfd', 2);
 
 -- --------------------------------------------------------
 
@@ -98,9 +128,31 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `createdAt`) VALUES
-('cmecx5j9k000014ii8hic001o', 'Admin User', 'admin@foodorder.com', '$2y$10$tUV4hE5mzoVrHwSHvuOdlewil3vGhqM2ZRPqGAmtkNTHnhvY9mO2G', 'admin', '2025-08-15 14:24:02.504'),
-('cmecz3jey0001dskbtaaj61xg', 'Varanan', 'vaaranan@gmail.com', '$2a$12$EgMFPqPurzQHLBC.P5vGtOvSzC3HLqN5Ij865BBHTPwTdn0tTDvTq', 'customer', '2025-08-15 15:18:28.618'),
-('cmed0w3ev0002dskbnqj99itr', 'Theebika', 'theebika@gmail.com', '$2a$12$l76L3HE3NGvOnlyL8rsPluc1PgK0muoMV3PIoQSdLCapTm3GkIFHO', 'customer', '2025-08-15 16:08:40.518');
+('1', 'Admin', 'admin@admin.com', '$2y$10$2GOWPm4f.jSdLgGSzhDAr./dninpXSOHVCuZKSTYzvMGHolkzU5/C', 'admin', '2025-08-16 16:33:15.000');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `_prisma_migrations`
+--
+
+CREATE TABLE `_prisma_migrations` (
+  `id` varchar(36) NOT NULL,
+  `checksum` varchar(64) NOT NULL,
+  `finished_at` datetime(3) DEFAULT NULL,
+  `migration_name` varchar(255) NOT NULL,
+  `logs` text DEFAULT NULL,
+  `rolled_back_at` datetime(3) DEFAULT NULL,
+  `started_at` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+  `applied_steps_count` int(10) UNSIGNED NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `_prisma_migrations`
+--
+
+INSERT INTO `_prisma_migrations` (`id`, `checksum`, `finished_at`, `migration_name`, `logs`, `rolled_back_at`, `started_at`, `applied_steps_count`) VALUES
+('c8f514a5-5f66-4351-9a37-aff150277484', 'be3eafab05909eb9fe3938786f3360775a4d9a847751c337f89e0d75b4344627', '2025-08-16 11:02:58.393', '20250816110257_init_db', NULL, NULL, '2025-08-16 11:02:57.849', 1);
 
 --
 -- Indexes for dumped tables
@@ -110,7 +162,15 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `createdAt`) VAL
 -- Indexes for table `foods`
 --
 ALTER TABLE `foods`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `foods_categoryId_fkey` (`categoryId`);
+
+--
+-- Indexes for table `food_categories`
+--
+ALTER TABLE `food_categories`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `food_categories_name_key` (`name`);
 
 --
 -- Indexes for table `orders`
@@ -135,8 +195,20 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `users_email_key` (`email`);
 
 --
+-- Indexes for table `_prisma_migrations`
+--
+ALTER TABLE `_prisma_migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `foods`
+--
+ALTER TABLE `foods`
+  ADD CONSTRAINT `foods_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `food_categories` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `orders`
