@@ -201,6 +201,7 @@ const Home: React.FC = () => {
   return (
     <div className="bg-white antialiased">
       {/* <Navbar cartItemsCount={session ? getTotalItems() : 0} /> */}
+      <Navbar/>
       <Toaster position="top-center" richColors />
       {/* Hero Section */}
       <section className="relative overflow-hidden">

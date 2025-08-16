@@ -13,6 +13,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
+import logo from '../app/public/logo.png';
+
 interface NavbarProps {
   cartItemsCount?: number
 }
@@ -37,17 +39,17 @@ export function Navbar({ cartItemsCount = 0 }: NavbarProps) {
         <div className="flex justify-between items-center h-16">
           {/* Logo Section */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 relative">
+            <div className="w-28 h-20 relative">
               <Image
-                src="./logo.png"
+                src={logo}
                 alt="FoodOrder Logo"
                 fill
                 className="object-contain"
               />
             </div>
-            <span className="font-bold text-xl text-gray-800 hidden sm:block">
+            {/* <span className="font-bold text-xl text-gray-800 hidden sm:block">
               FoodOrder
-            </span>
+            </span> */}
           </Link>
 
           {/* Navigation Links - Middle Section */}

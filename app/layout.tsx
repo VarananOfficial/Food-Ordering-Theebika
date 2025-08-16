@@ -22,7 +22,7 @@ export default function RootLayout({
         <Providers>
           <div className="min-h-screen bg-gray-50 flex flex-col">
             {/* ✅ Navbar always visible */}
-            <Navbar />
+            {/* <Navbar /> */}
 
             {/* ✅ Page Content */}
             <main className="flex-grow">

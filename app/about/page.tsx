@@ -1,5 +1,8 @@
 import React from 'react'
 import Image from 'next/image'
+import image1 from '../public/img1.jpg'
+import image2 from '../public/img2.jpg'
+import image3 from '../public/img3.jpg'
 import { FaAward, FaLeaf, FaWineGlassAlt, FaUtensils } from 'react-icons/fa'
 
 const AboutPage = () => {
@@ -8,7 +11,7 @@ const AboutPage = () => {
       {/* Banner Image Section */}
       <section className="relative h-96 w-full">
         <Image 
-          src="/img1.jpg" 
+          src={image1} 
           alt="Elegant restaurant dining area"
           fill
           className="object-cover"
@@ -48,7 +51,7 @@ const AboutPage = () => {
           </div>
           <div className="relative h-96 rounded-xl overflow-hidden shadow-xl">
             <Image 
-              src="/img2.jpg" 
+              src={image2}
               alt="Our restaurant in 1970s"
               fill
               className="object-cover"
@@ -104,7 +107,7 @@ const AboutPage = () => {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="relative h-96 rounded-xl overflow-hidden shadow-xl order-last md:order-first">
             <Image 
-              src="/img3.jpg" 
+              src={image3} 
               alt="Our head chef"
               fill
               className="object-cover"
